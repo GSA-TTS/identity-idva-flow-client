@@ -1,0 +1,52 @@
+---
+# This workflow will run unit tests and deploy the application to a
+# target environment
+
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "*"
+    paths-ignore:
+      - "**.md" # All markdown files in the repository
+
+jobs:
+
+  deploy:
+    if: github.repository_owner == '18F'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: 18F/identity-idva-cf-setup@v2
+        id: cf-setup
+        with:
+          cf-username: ${{ secrets.CF_USERNAME }}
+          cf-password: ${{ secrets.CF_PASSWORD }}
+          cf-org: ${{ secrets.CF_ORG }}
+
+      - name: Set flow config name
+        run: |
+          target_env_upper=${{ steps.cf-setup.outputs.target-environment-upper }}
+          echo "FLOW_CLIENT_CONFIG_NAME=FLOW_CLIENT_CONFIG_$target_env_upper" >> $GITHUB_ENV
+
+      - name: Write flow config to file
+        env:
+          FLOW_CLIENT_CONFIG: ${{ secrets[env.FLOW_CLIENT_CONFIG_NAME] }}
+        run: |
+          # Ensure the secret is valid JSON
+          echo "$FLOW_CLIENT_CONFIG" | jq empty
+          {
+            echo "---"
+            echo "FLOW_CLIENT_CONFIG: |"
+            # sed formats yaml value with proper indentation
+            echo "$FLOW_CLIENT_CONFIG" | sed 's/^/  /'
+          } > vars-env.yaml
+
+      - name: Deploy application
+        run: cf push --vars-file vars.yaml --vars-file vars-env.yaml
+          --var ENVIRONMENT=${{ steps.cf-setup.outputs.target-environment }}
+          --strategy rolling
