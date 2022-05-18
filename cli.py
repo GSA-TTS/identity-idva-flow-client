@@ -19,8 +19,10 @@ def main():
     args = parser.parse_args()
 
     if args.seconds is None and args.days is None:
+        print("using default duration")
         valid_for = settings.VALID_FOR
     else:
+        print(f"days is {args.days} and seconds is {args.seconds}")
         valid_for = timedelta(
             days=0 if args.days is None else args.days,
             seconds=0 if args.seconds is None else args.seconds,

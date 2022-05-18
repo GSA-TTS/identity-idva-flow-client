@@ -83,9 +83,10 @@ async def flow(flow_name, request: Request):
 
 @app.get("/jwks.json")
 async def flow():
+    public_key_fields = ["kty", "e", "use", "kid", "alg", "n"]
     public_key = {
-        k: v
-        for (k, v) in settings.KEYS[0].items()
-        if k in ["kty", "e", "use", "kid", "alg", "n"]
+        key: value
+        for (key, value) in settings.KEYS[0].items()
+        if key in public_key_fields
     }
     return {"keys": [public_key]}
