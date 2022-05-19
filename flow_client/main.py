@@ -1,4 +1,5 @@
 import logging
+import json
 
 from authlib.integrations.starlette_client import OAuth, OAuthError
 from fastapi import FastAPI
@@ -78,6 +79,12 @@ async def flow(flow_name, request: Request):
 
     url = settings.FLOWS[flow_name]
     request = sig_gen.gen_sig_url(url, settings.VALID_FOR)
+    logging.info(
+        "Url generated for user %s (%s)\nUrl: %s",
+        user.get("sub", "no subject"),
+        user.get("preferred_username", ""),
+        request.url,
+    )
     return RedirectResponse(url=request.url, status_code=302)
 
 
