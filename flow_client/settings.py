@@ -1,7 +1,10 @@
 from datetime import timedelta
+import logging
 import os
 import json
 import sys
+
+log = logging.getLogger(__name__)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG set is set to True if env var is "True"
@@ -12,10 +15,9 @@ FLOW_CLIENT_CONFIG = os.getenv("FLOW_CLIENT_CONFIG")
 try:
     oidc_config = json.loads(FLOW_CLIENT_CONFIG)
 except (json.JSONDecodeError, TypeError) as err:
-    if DEBUG:
-        print(str(err))
-    sys.exit("Failed to decode FLOW_CLIENT_CONFIG")
-
+    log.error("Unable to load oidc_config from FLOW_CLIENT_CONFIG")
+    log.debug("Error: %s",str(err))
+    sys.exit("A flow client config is nessary for the application to run")
 
 FLOW_ISSUER = oidc_config["flow_issuer"]
 FLOW_CLIENT_ID = oidc_config["flow_client_id"]

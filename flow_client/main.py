@@ -1,5 +1,4 @@
 import logging
-import json
 
 from authlib.integrations.starlette_client import OAuth, OAuthError
 from fastapi import FastAPI
@@ -10,14 +9,14 @@ from starlette_prometheus import PrometheusMiddleware, metrics
 
 from flow_client import settings, sig_gen
 
+logging.basicConfig(level=logging.INFO)
+
 app = FastAPI()
 
 app.add_middleware(SessionMiddleware, secret_key=settings.SESSION_SECRET)
 
 app.add_middleware(PrometheusMiddleware)
 app.add_route("/metrics/", metrics)
-
-logging.getLogger().setLevel(logging.INFO)
 
 oauth = OAuth()
 oauth.register(
