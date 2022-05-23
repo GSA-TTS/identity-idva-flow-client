@@ -16,8 +16,8 @@ try:
     oidc_config = json.loads(FLOW_CLIENT_CONFIG)
 except (json.JSONDecodeError, TypeError) as err:
     log.error("Unable to load oidc_config from FLOW_CLIENT_CONFIG")
-    log.debug("Error: %s",str(err))
-    sys.exit("A flow client config is nessary for the application to run")
+    log.debug("Error: %s", str(err))
+    sys.exit("A flow client config is necessary for the application to run")
 
 FLOW_ISSUER = oidc_config["flow_issuer"]
 FLOW_CLIENT_ID = oidc_config["flow_client_id"]
