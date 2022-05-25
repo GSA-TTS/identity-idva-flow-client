@@ -24,12 +24,17 @@ Visit the flow client url and log in with idp account. After logging in, you wil
 ssh into the instance and run `app/sign_url.sh` to produce a signed url.
 
 ```
+OPTIONS
+
+    flow can be selected by name from list in config or specified by url. if not specified, defaults to first flow in config
+    time is specified in days + seconds. defaults to time set in config which is usually 1 day
+
     -n --name
-        flow name url signature signed request is created for
+        flow name. used to select flow from list of flows in config
     -u --url
-        url signature signed request is created for
+        flow url
     -d --days
-        num days is sig is valid for
+        num days is sig is valid. summed with seconds
     -s --seconds
-        num seconds is sig is valid for
+        num seconds is sig is valid. summed with days
 ```

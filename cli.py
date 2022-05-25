@@ -5,15 +5,11 @@ from argparse import ArgumentParser
 
 def main():
     parser = ArgumentParser()
+    parser.add_argument("-n", "--name", help="name of flow")
+    parser.add_argument("-u", "--url", help="flow url")
+    parser.add_argument("-d", "--days", type=float, help="num days is sig is valid")
     parser.add_argument(
-        "-n", "--name", help="flow name url signature signed request is created for"
-    )
-    parser.add_argument(
-        "-u", "--url", help="url signature signed request is created for"
-    )
-    parser.add_argument("-d", "--days", type=float, help="num days is sig is valid for")
-    parser.add_argument(
-        "-s", "--seconds", type=float, help="num seconds is sig is valid for"
+        "-s", "--seconds", type=float, help="num seconds is sig is valid"
     )
 
     args = parser.parse_args()
