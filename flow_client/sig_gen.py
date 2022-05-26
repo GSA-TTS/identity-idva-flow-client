@@ -1,14 +1,14 @@
+import datetime
 import secrets
 import time
-from datetime import timedelta
 
-from jose import jwt, jwk, constants
-from requests import Request
+import requests
+from jose import constants, jwk, jwt
 
 from flow_client import settings
 
 
-def gen_sig_url(url: str, valid_time: timedelta):
+def gen_sig_url(url: str, valid_time: datetime.timedelta):
 
     state = secrets.token_urlsafe(24)
     nonce = secrets.token_urlsafe(16)
@@ -34,4 +34,4 @@ def gen_sig_url(url: str, valid_time: timedelta):
         "request": encoded_jwt,
     }
 
-    return Request("GET", url, params=query).prepare()
+    return requests.Request("GET", url, params=query).prepare()

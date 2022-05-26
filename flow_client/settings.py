@@ -1,7 +1,7 @@
-from datetime import timedelta
+import datetime
+import json
 import logging
 import os
-import json
 import sys
 
 log = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ FLOW_CLIENT_ISSUER = oidc_config["flow_client_issuer"]
 FLOWS = oidc_config["flows"]
 KEYS = oidc_config["keys"]
 
-VALID_FOR = timedelta(
+VALID_FOR = datetime.timedelta(
     days=oidc_config["flow_request_validity"]["days"],
     seconds=oidc_config["flow_request_validity"]["seconds"],
 )

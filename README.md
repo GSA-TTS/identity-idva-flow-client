@@ -24,17 +24,18 @@ Visit the flow client url and log in with idp account. After logging in, you wil
 ssh into the instance and run `app/sign_url.sh` to produce a signed url.
 
 ```
-OPTIONS
+usage: sign_url.sh [-h] [-n NAME] [-u URL] [-d DAYS] [-s SECONDS]
 
-    flow can be selected by name from list in config or specified by url. if not specified, defaults to first flow in config
-    time is specified in days + seconds. defaults to time set in config which is usually 1 day
+Generate a url with signed request object for a flow endpoint.
 
-    -n --name
-        flow name. used to select flow from list of flows in config
-    -u --url
-        flow url
-    -d --days
-        num days is sig is valid. summed with seconds
-    -s --seconds
-        num seconds is sig is valid. summed with days
+    flow can be selected by name from list in config or specified by url. if not specified, defaults to first flow in config.
+    time is specified in days and seconds. defaults to time set in config which is usually 1 day
+
+options:
+  -h, --help            show this help message and exit
+  -n NAME, --name NAME  flow name. used to select flow from list of flows in config
+  -u URL, --url URL     flow url
+  -d DAYS, --days DAYS  num days sig is valid. summed with seconds
+  -s SECONDS, --seconds SECONDS
+                        num seconds sig is valid. summed with days
 ```
