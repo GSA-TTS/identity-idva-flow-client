@@ -1,5 +1,6 @@
 import argparse
 import datetime
+import sys
 
 from flow_client import settings, sig_gen
 
@@ -21,7 +22,10 @@ def main():
         "--name",
         help="flow name. used to select flow from list of flows in config",
     )
-    parser.add_argument("-u", "--url", help="flow url")
+    parser.add_argument("-u", "--url", help="flow url"),
+    parser.add_argument(
+        "-l", "--list", action="store_true", help="list stored flow names"
+    )
     parser.add_argument(
         "-d", "--days", type=float, help="num days sig is valid. summed with seconds"
     )
@@ -31,32 +35,39 @@ def main():
 
     args = parser.parse_args()
 
+    if args.list:
+        print(f"list of flows:")
+        for name in settings.FLOWS.keys():
+            print(f"\t{name}")
+        sys.exit()
+
     if args.seconds is None and args.days is None:
         valid_for = settings.VALID_FOR
-        print(f"using default duration:")
+        print(f"using default duration:  ", end="")
     else:
         valid_for = datetime.timedelta(
             days=0 if args.days is None else args.days,
             seconds=0 if args.seconds is None else args.seconds,
         )
-        print(f"using supplied duration:")
-    print(f"duration is {valid_for.days} days and {valid_for.seconds} seconds")
+        print(f"using supplied duration:  ", end="")
+    print(f"{valid_for.days} days and {valid_for.seconds} seconds")
 
     if args.name is not None:
         if args.name not in settings.FLOWS:
-            print("no such flow")
+            print(f"no such flow:  {args.name}")
             exit()
         url = settings.FLOWS[args.name]
-        print(f"using supplied flow {args.name}")
+        print(f"using supplied flow:  {args.name}")
     elif args.url is not None:
         url = args.url
         print(f"using supplied flow url")
     else:
         name = next(iter(settings.FLOWS.keys()))
-        print(f"using default flow {name}")
+        print(f"using default flow:  {name}")
         url = settings.FLOWS[name]
 
     request = sig_gen.gen_sig_url(url, valid_for)
+    print()
     print(request.url)
 
 
