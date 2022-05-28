@@ -8,7 +8,8 @@ FLOW_CLIENT_CONFIG: |
       "flow_redirect_uri": "",
       "flow_client_issuer": "",
       "flows": {
-          "flow_name": ""
+          "flow_name": "",
+          "flow_name2": ""
       },
       "keys": [{
       }],

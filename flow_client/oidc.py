@@ -7,11 +7,19 @@ from jose import constants, jwk, jwt
 
 from flow_client import settings
 
+NONCE_BYTES = 16
+STATE_BYTES = 24
+
+public_key_fields = ["kty", "e", "use", "kid", "alg", "n"]
+
+
+def public_key(jwk):
+    """get public key from jwk"""
+    return {key: value for (key, value) in jwk.items() if key in public_key_fields}
+
 
 def gen_sig_url(url: str, valid_time: datetime.timedelta):
 
-    state = secrets.token_urlsafe(24)
-    nonce = secrets.token_urlsafe(16)
     epoch_time = int(time.time()) + valid_time.total_seconds()
 
     jwt_data = {
@@ -28,9 +36,9 @@ def gen_sig_url(url: str, valid_time: datetime.timedelta):
         "response_type": "code",
         "client_id": settings.FLOW_CLIENT_ID,
         "scope": "openid profile",
-        "state": state,
+        "state": secrets.token_urlsafe(STATE_BYTES),
         "redirect_uri": settings.FLOW_REDIRECT_URI,
-        "nonce": nonce,
+        "nonce": secrets.token_urlsafe(NONCE_BYTES),
         "request": encoded_jwt,
     }
 

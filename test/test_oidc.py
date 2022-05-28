@@ -1,15 +1,16 @@
 import datetime
 from urllib import parse
 
-from flow_client import settings, sig_gen
 from jose import constants, jwk, jwt
+
+from flow_client import oidc, settings
 
 
 def test_gen_sig_url() -> None:
-    """test get"""
+    """test url signature"""
     ipd_url = "https://example.com"
     valid_for = datetime.timedelta(days=1, seconds=0)
-    request = sig_gen.gen_sig_url(ipd_url, valid_for)
+    request = oidc.gen_sig_url(ipd_url, valid_for)
     url = parse.urlparse(request.url)
     query = parse.parse_qs(url.query)
     request_jwt = query["request"][0]

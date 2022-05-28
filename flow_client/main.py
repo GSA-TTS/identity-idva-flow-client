@@ -7,7 +7,7 @@ from starlette import requests as server
 from starlette import responses
 from starlette.middleware import sessions
 
-from flow_client import settings, sig_gen
+from flow_client import oidc, settings
 
 logging.basicConfig(level=logging.INFO)
 
@@ -77,7 +77,7 @@ async def flow(flow_name, request: server.Request):
         return responses.HTMLResponse("no such flow", status_code=404)
 
     url = settings.FLOWS[flow_name]
-    request = sig_gen.gen_sig_url(url, settings.VALID_FOR)
+    request = oidc.gen_sig_url(url, settings.VALID_FOR)
     logging.info(
         "Url generated for user %s (%s)\nUrl: %s",
         user.get("sub", "no subject"),
@@ -89,10 +89,7 @@ async def flow(flow_name, request: server.Request):
 
 @app.get("/jwks.json")
 async def flow():
-    public_key_fields = ["kty", "e", "use", "kid", "alg", "n"]
-    public_key = {
-        key: value
-        for (key, value) in settings.KEYS[0].items()
-        if key in public_key_fields
-    }
-    return {"keys": [public_key]}
+
+    public_keys = [oidc.public_key(jwk) for jwk in settings.KEYS]
+
+    return {"keys": public_keys}

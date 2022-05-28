@@ -1,4 +1,8 @@
 import os
+import typing
+
+import pytest
+from fastapi import testclient
 
 os.environ[
     "FLOW_CLIENT_CONFIG"
@@ -34,3 +38,13 @@ os.environ[
       "keycloak_metadata_url": "https://example.com/keycloak/realms/flow/.well-known/openid-configuration",
       "session_secret": "session_secret"
 }"""
+
+# FLOW_CLIENT_CONFIG env var must be set before importing main
+from flow_client import main
+
+
+@pytest.fixture(scope="module")
+def client() -> typing.Generator:
+    """api test client"""
+    with testclient.TestClient(main.app) as test_client:
+        yield test_client

@@ -1,11 +1,10 @@
 import argparse
 import datetime
-import sys
 
-from flow_client import settings, sig_gen
+from flow_client import oidc, settings
 
 
-def main():
+def parse_args():
 
     description = """Generate a url with signed request object for a flow endpoint.
 
@@ -24,7 +23,7 @@ def main():
     )
     parser.add_argument("-u", "--url", help="flow url"),
     parser.add_argument(
-        "-l", "--list", action="store_true", help="list stored flow names"
+        "-l", "--list", action="store_true", help="list stored flow names and exit"
     )
     parser.add_argument(
         "-d", "--days", type=float, help="num days sig is valid. summed with seconds"
@@ -33,14 +32,21 @@ def main():
         "-s", "--seconds", type=float, help="num seconds sig is valid. summed with days"
     )
 
-    args = parser.parse_args()
+    return parser.parse_args()
 
+
+def main():
+
+    args = parse_args()
+
+    # list flows and exit
     if args.list:
         print(f"list of flows:")
         for name in settings.FLOWS.keys():
             print(f"\t{name}")
-        sys.exit()
+        return
 
+    # select duration
     if args.seconds is None and args.days is None:
         valid_for = settings.VALID_FOR
         print(f"using default duration:  ", end="")
@@ -52,10 +58,11 @@ def main():
         print(f"using supplied duration:  ", end="")
     print(f"{valid_for.days} days and {valid_for.seconds} seconds")
 
+    # select flow
     if args.name is not None:
         if args.name not in settings.FLOWS:
             print(f"no such flow:  {args.name}")
-            exit()
+            return
         url = settings.FLOWS[args.name]
         print(f"using supplied flow:  {args.name}")
     elif args.url is not None:
@@ -66,8 +73,7 @@ def main():
         print(f"using default flow:  {name}")
         url = settings.FLOWS[name]
 
-    request = sig_gen.gen_sig_url(url, valid_for)
-    print()
+    request = oidc.gen_sig_url(url, valid_for)
     print(request.url)
 
 
