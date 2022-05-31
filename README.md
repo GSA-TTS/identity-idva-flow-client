@@ -1,6 +1,6 @@
 # identity-identity-flow-client
 
-Flow client is used to invoke flows that require signed requests to access.
+Flow client is used to invoke flows that require signed oidc requests to access.
 
 ## Configure
 
