@@ -1,0 +1,24 @@
+---
+ENVIRONMENT: env
+FLOW_CLIENT_CONFIG: |
+  {
+      "flow_issuer": "",
+      "flow_client_id": "",
+      "flow_client_secret": "",
+      "flow_redirect_uri": "",
+      "flow_client_issuer": "",
+      "flows": {
+          "flow_name": "",
+          "flow_name2": ""
+      },
+      "keys": [{
+      }],
+      "flow_request_validity": {
+          "days": 0,
+          "seconds": 0
+      },
+      "keycloak_client_id": "",
+      "keycloak_client_secret": "",
+      "keycloak_metadata_url": "",
+      "session_secret": ""
+  }
