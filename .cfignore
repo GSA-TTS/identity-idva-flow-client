@@ -1,2 +1,9 @@
 .venv
 __pycache__
+.github
+.pre-commit-config.yaml
+test
+README.md
+requirements-dev.txt
+vars-env.yaml
+vars.yaml
