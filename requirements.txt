@@ -5,4 +5,4 @@ starlette-prometheus==0.9.0
 Authlib==1.2.0
 httpx==0.23.3
 itsdangerous==2.1.2
-python-jose[cryptography]==3.3.0
+python-jose[cryptography]==3.5.0
